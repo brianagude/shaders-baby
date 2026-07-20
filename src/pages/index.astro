@@ -1,0 +1,57 @@
+---
+const shaderFiles = import.meta.glob('../shaders/*.frag', {
+	query: '?raw',
+	import: 'default',
+	eager: true,
+});
+
+const shaders = Object.entries(shaderFiles)
+	.map(([path, source]) => {
+		const slug = path.replace(/^.*\//, '').replace('.frag', '');
+		return { slug, source };
+	})
+	.sort((a, b) => b.slug.localeCompare(a.slug));
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Shaders Baby</title>
+	</head>
+	<body>
+		<div class="title-wrapper">
+			<h1>Shaders Baby!</h1>
+		</div>
+		<div class="grid">
+			{shaders.map(({ slug, source }) => (
+				<a class="tile" href={`/shaders/${slug}`}>
+					<canvas class="glslCanvas" data-fragment={source} width="300" height="300"></canvas>
+					<p>{slug}</p>
+				</a>
+			))}
+		</div>
+		<script>
+			import 'glslCanvas';
+		</script>
+	</body>
+</html>
+
+<style>
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+	}
+	.tile {
+		display: block;
+	}
+	.tile canvas {
+		display: block;
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		background: #000;
+	}
+</style>

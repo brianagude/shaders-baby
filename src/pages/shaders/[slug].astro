@@ -1,0 +1,51 @@
+---
+export function getStaticPaths() {
+	const shaderFiles = import.meta.glob('../../shaders/*.frag', {
+		query: '?raw',
+		import: 'default',
+		eager: true,
+	});
+
+	return Object.entries(shaderFiles).map(([path, source]) => {
+		const slug = path.replace(/^.*\//, '').replace('.frag', '');
+		return { params: { slug }, props: { source } };
+	});
+}
+
+const { slug } = Astro.params;
+const { source } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{slug} — Shaders Baby</title>
+	</head>
+	<body>
+		<a class="back" href="/">&larr; All shaders</a>
+		<canvas class="glslCanvas" data-fragment={source} width="600" height="600"></canvas>
+		<h1>{slug}</h1>
+		<script>
+			import 'glslCanvas';
+		</script>
+	</body>
+</html>
+
+<style>
+	body {
+		display: flex;
+		flex-direction: column;
+	}
+	.back {
+		align-self: flex-start;
+	}
+	canvas {
+		width: min(600px, 100%);
+		aspect-ratio: 1 / 1;
+		background: #000;
+	}
+</style>
