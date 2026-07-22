@@ -14,6 +14,11 @@ export function getStaticPaths() {
 
 const { slug } = Astro.params;
 const { source } = Astro.props;
+
+const textures: Record<string, string[]> = {
+	'05': ['/rock-unsplash.jpg'],
+};
+const texList = textures[slug]?.join(',');
 ---
 
 <html lang="en">
@@ -27,7 +32,13 @@ const { source } = Astro.props;
 	</head>
 	<body>
 		<a class="back" href="/">&larr; All shaders</a>
-		<canvas class="glslCanvas" data-fragment={source} width="600" height="600"></canvas>
+		<canvas
+			class="glslCanvas"
+			data-fragment={source}
+			data-textures={texList}
+			width="600"
+			height="600"
+		></canvas>
 		<h1>{slug}</h1>
 		<script>
 			import 'glslCanvas';

@@ -45,6 +45,7 @@ void main(){
   color=mix(color,black,sq3);
   color=mix(color,black,sq4);
   color=mix(color,black,sq5);
+  color+=u_time*0.;
   
   gl_FragColor=vec4(color,1.);
 }

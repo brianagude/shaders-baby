@@ -5,10 +5,14 @@ const shaderFiles = import.meta.glob('../shaders/*.frag', {
 	eager: true,
 });
 
+const textures: Record<string, string[]> = {
+	'05': ['/rock-unsplash.jpg'],
+};
+
 const shaders = Object.entries(shaderFiles)
 	.map(([path, source]) => {
 		const slug = path.replace(/^.*\//, '').replace('.frag', '');
-		return { slug, source };
+		return { slug, source, texList: textures[slug]?.join(',') };
 	})
 	.sort((a, b) => b.slug.localeCompare(a.slug));
 ---
@@ -27,9 +31,15 @@ const shaders = Object.entries(shaderFiles)
 			<h1>Shaders Baby!</h1>
 		</div>
 		<div class="grid">
-			{shaders.map(({ slug, source }) => (
+			{shaders.map(({ slug, source, texList }) => (
 				<a class="tile" href={`/shaders/${slug}`}>
-					<canvas class="glslCanvas" data-fragment={source} width="300" height="300"></canvas>
+					<canvas
+						class="glslCanvas"
+						data-fragment={source}
+						data-textures={texList}
+						width="300"
+						height="300"
+					></canvas>
 					<p>{slug}</p>
 				</a>
 			))}

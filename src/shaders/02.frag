@@ -18,6 +18,6 @@ void main(){
   float pct=b*l*t*r;
   
   color=vec3(pct);
-  
+  color+=u_time*0.;
   gl_FragColor=vec4(color,1.);
 }
